@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Generador de Gafetes — Riverline Ergonomic</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"/>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <div class="shell">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">
+          <span class="brand-dot"></span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">RIVERLINE</span>
+          <span class="brand-sub">Ergonomic</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <span class="nav-label">Módulo</span>
+        <a href="#" class="nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="7" height="9" rx="1.5"/><rect x="13" y="3" width="9" height="5" rx="1.5"/><rect x="13" y="12" width="9" height="9" rx="1.5"/><rect x="2" y="16" width="7" height="5" rx="1.5"/></svg>
+          Generador de Gafetes
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="version-badge">v 2.0</div>
+        <p>Generación masiva<br>de credenciales</p>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1 class="page-title">Generador de Gafetes</h1>
+          <p class="page-subtitle">Carga tu Excel y las fotos para producir todas las credenciales en lote</p>
+        </div>
+        <div class="status-chip" id="statusChip">
+          <span class="status-dot idle"></span>
+          <span class="status-text">En espera</span>
+        </div>
+      </header>
+
+      <section class="upload-grid">
+
+        <div class="upload-card" id="excelCard">
+          <div class="card-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+          </div>
+          <div class="card-info">
+            <span class="card-label">Archivo Excel</span>
+            <span class="card-hint" id="excelHint">Sin seleccionar</span>
+          </div>
+          <label class="card-btn" for="excelFile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Subir archivo
+            <input type="file" id="excelFile" accept=".xlsx,.xls" hidden/>
+          </label>
+          <div class="card-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+
+        <div class="upload-card" id="photoCard">
+          <div class="card-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div class="card-info">
+            <span class="card-label">Fotografías</span>
+            <span class="card-hint" id="photoHint">Sin seleccionar</span>
+          </div>
+          <label class="card-btn" for="photoFiles">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Subir fotos
+            <input type="file" id="photoFiles" multiple accept="image/*" hidden/>
+          </label>
+          <div class="card-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+
+      </section>
+
+      <div class="action-row">
+        <button id="generateBtn" class="btn-generate">
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </span>
+          <span class="btn-text">Generar Gafetes</span>
+          <span class="btn-shimmer"></span>
+        </button>
+        <p class="action-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          Los botones de descarga aparecerán al finalizar la generación
+        </p>
+      </div>
+
+      <div class="progress-wrap" id="progressWrap" style="display:none">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+        <span class="progress-label" id="progressLabel">Procesando gafetes…</span>
+      </div>
+
+      <section class="preview-section">
+        <div class="preview-header">
+          <span class="section-label">Vista previa</span>
+          <span class="preview-count" id="previewCount"></span>
+        </div>
+        <div id="previewArea" class="preview-grid"></div>
+        <div class="preview-empty" id="previewEmpty">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="2" width="20" height="20" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+          </div>
+          <p>Los gafetes aparecerán aquí una vez generados</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+<script src="app.js"></script>
+</body>
+</html>
