@@ -323,10 +323,18 @@ function waitImages() {
 }
 
 function formatExcelDate(excelDate) {
+
   if (!excelDate) return '';
-  const date  = new Date((excelDate - 25569) * 86400 * 1000);
-  const day   = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year  = date.getFullYear();
-  return day + '/' + month + '/' + year;
+
+  // Convertir serial Excel → UTC real
+  const utc_days = Math.floor(excelDate - 25569);
+  const utc_value = utc_days * 86400;
+
+  const date_info = new Date(utc_value * 1000);
+
+  const day = String(date_info.getUTCDate()).padStart(2, '0');
+  const month = String(date_info.getUTCMonth() + 1).padStart(2, '0');
+  const year = date_info.getUTCFullYear();
+
+  return `${day}/${month}/${year}`;
 }
